@@ -27,9 +27,12 @@ public class GuGudan2 {
         }
     }
 
+
     public static void main(String[] args){
         GuGudan2 gugudan = new GuGudan2();
         gugudan.init();
         gugudan.printAll();
     }
 }
+
+
