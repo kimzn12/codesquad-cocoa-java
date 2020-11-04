@@ -1,10 +1,19 @@
+/*
+몬스터 나오면 스코어 출력
+몬스터 만나고 다음 판 넘어가기
+(지뢰 수 늘리기, 초기화)
+ */
+
+
+
 package mission2;
 
+
 import java.util.Scanner;
+import java.util.Random; //랜덤함수 사용하기 위해서
 // 자바 배열을 출력하기 위해 필수적으로 필요 import java.util.Arrays;
 
 class Map {
-    //변수
     public String[][] map;
 
     //1. 맵 생성
@@ -19,9 +28,10 @@ class Map {
     }
 
     //2. 맵 출력 - 출력함수가 map에 있어야하는지 player.moster에 있어야하는지
-    public void printMap(Player p, Monster m){
-        this.map[p.playerX][p.playerY] = "P";
-        this.map[m.monsterX][m.monsterY] = "M";
+    public void printMap(Player p, Monster m, Mine mine){
+        this.map[p.playerX][p.playerY] = "\uD83C\uDFC3";
+        this.map[m.monsterX][m.monsterY] = "\uD83D\uDC7E";
+        this.map[mine.mineX][mine.mineY] = "\uD83D\uDCA3";
 
         // Array.toString() 1차원 배열 출력, Array.deeptoString: 다차원 출력
         // output:[[0,0,0],[0,0,0]]
@@ -56,10 +66,11 @@ class Player {
         Scanner sc = new Scanner(System.in);
         System.out.println("W,S,A,D중 하나를 입력하세요: ");
         String key = sc.next();
-        sc.close();
+        //sc.close();
 
         // 이동코드 Q:else문 너무 많이 쓴 것 같다. >> switch로 바꾸어보자
         //String 함수는 ==으로 비교하지 않는다. equals()사용.
+
         if (key.equals("W")) this.playerX -= 1;
         else if (key.equals("S")) this.playerX += 1;
         else if (key.equals("A")) this.playerY -= 1;
@@ -68,35 +79,15 @@ class Player {
     }
 
     //3. 사망
-    public void gameOver(Mine mine){
-        if (this.playerX == mine.mineX && this.playerY == mine.mineY){
-            System.out.println("Game Over");
-            //실행 끝 함수 추가
-        }
+    public void gameOver(){
+        System.out.println("Game Over");
+        //실행 끝 함수 추가?
     }
 
     //4. 점수
-    public void score(Monster m){
-        if (this.playerX == m.monsterX && this.playerY == m.monsterY){
-            this.score++;
-        }
-
+    public void getScore(){
+        this.score++;
     }
-}
-
-
-
-class Mine {
-    public int mineX;
-    public int mineY;
-
-    //1. 생성
-    public void createMine(){
-        //랜덤하게 생성
-        this.mineX = 5;
-        this.mineY = 6;
-    }
-
 }
 
 class Monster{
@@ -104,27 +95,101 @@ class Monster{
     public int monsterY;
 
     //생성
-    public void createMonster(){
+    public void createMonster(Player p){
+        Random random = new Random();
+
         //0부터 10까지 랜덤하게
-        this.monsterX = 4;
-        this.monsterY = 5;
+        for(;;){
+            this.monsterX = random.nextInt(11);
+            this.monsterY = random.nextInt(11);
+
+            // 이렇게 해도 되나 ???
+            if((this.monsterX == p.playerX)&&(this.monsterY == p.playerY)) continue;
+            break;
+        }
+
+
 
     }
 
 }
 
+class Mine {
+    public int mineX;
+    public int mineY;
+
+
+    //1. 생성
+    public void createMine(Player p,Monster m){
+
+        //랜덤하게 생성
+        Random random = new Random();
+
+        for (;;){
+            this.mineX = random.nextInt(11); // bound 왜 생기는거지
+            this.mineY = random.nextInt(11);
+
+            if((this.mineX == p.playerX)&&(this.mineY == p.playerY)) continue;
+            if((this.mineX == m.monsterX)&&(this.mineY == m.monsterY)) continue;
+
+            break;
+        }
+
+
+
+    }
+}
+
+class PlayRPG{
+
+    //시작
+    public void start(Player p,Monster m,Mine mine, Map map){
+        //생성
+        map.createMap();
+        p.createPlayer();
+        m.createMonster(p);
+        mine.createMine(p,m);
+    }
+
+    //실행
+    public void play(Player p,Monster m,Mine mine, Map map){
+        while(p.playerX < 11 && p.playerX > -1 && p.playerY < 11 && p.playerY > -1){
+            System.out.println(p.score);
+            map.printMap(p,m,mine);
+            p.move();
+
+            //1. m 만나면 스코어 +, 맵 초기화
+            if (p.playerX == m.monsterX && p.playerY == m.monsterY){
+                p.getScore();
+                this.exit();
+            }
+            //2. mine 만나면 종료
+            if (p.playerX == mine.mineX && p.playerY == mine.mineY){
+                p.gameOver();
+                this.exit();
+            }
+
+        }
+
+    }
+    //종료
+    public void exit(){
+        System.exit(0);
+    }
+}
+
+
 public class SimpleRPG {
     public static void main(String[] args){
-        Map map = new Map();
         Player player = new Player();
         Monster monster = new Monster();
+        Mine mine = new Mine();
+        Map map = new Map();
 
-        map.createMap();
-        player.createPlayer();
-        monster.createMonster();
+        PlayRPG playrpg = new PlayRPG();
 
-        map.printMap(player,monster);
-        player.move();
-        map.printMap(player,monster);
+
+        playrpg.start(player,monster,mine,map);
+        playrpg.play(player,monster,mine,map);
     }
 }
