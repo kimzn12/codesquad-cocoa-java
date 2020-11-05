@@ -27,7 +27,7 @@ class Map {
         }
     }
 
-    //2. 맵 출력 - 출력함수가 map에 있어야하는지 player.moster에 있어야하는지
+    //2. 맵 출력 - Q출력함수가 map에 있어야하는지 player.moster에 있어야하는지
     public void printMap(Player p, Monster m, Mine mine){
         this.map[p.playerX][p.playerY] = "\uD83C\uDFC3";
         this.map[m.monsterX][m.monsterY] = "\uD83D\uDC7E";
@@ -54,10 +54,12 @@ class Player {
     public int playerY;
     public int score = 0;
 
-    //1. 생성
-    public void createPlayer(){
-        this.playerX = 5;
-        this.playerY = 5;
+    public static final int INIT_LOCATION = 5;
+
+    //생성자
+    public Player(){
+        this.playerX = INIT_LOCATION;
+        this.playerY = INIT_LOCATION;
     }
 
     //2. 이동
@@ -94,21 +96,20 @@ class Monster{
     public int monsterX;
     public int monsterY;
 
+    public Monster(){
+        createMonster();
+    }
+
     //생성
-    public void createMonster(Player p){
+    public void createMonster(){
         Random random = new Random();
 
-        //0부터 10까지 랜덤하게
-        for(;;){
-            this.monsterX = random.nextInt(11);
-            this.monsterY = random.nextInt(11);
+        //0부터 10까지 랜덤하게 생성
+        this.monsterX = random.nextInt(11);
+        this.monsterY = random.nextInt(11);
 
-            // 이렇게 해도 되나 ???
-            if((this.monsterX == p.playerX)&&(this.monsterY == p.playerY)) continue;
-            break;
-        }
-
-
+        //몬스터의 생성위치가 플레이어 위치와 겹치면 다시 생성
+        if((this.monsterX == 5)&&(this.monsterY == 5)) createMonster();
 
     }
 
@@ -144,10 +145,8 @@ class PlayRPG{
 
     //시작
     public void start(Player p,Monster m,Mine mine, Map map){
-        //생성
+        //생성 >> 수정하기
         map.createMap();
-        p.createPlayer();
-        m.createMonster(p);
         mine.createMine(p,m);
     }
 
@@ -161,7 +160,8 @@ class PlayRPG{
             //1. m 만나면 스코어 +, 맵 초기화
             if (p.playerX == m.monsterX && p.playerY == m.monsterY){
                 p.getScore();
-                this.exit();
+
+
             }
             //2. mine 만나면 종료
             if (p.playerX == mine.mineX && p.playerY == mine.mineY){
@@ -191,5 +191,6 @@ public class SimpleRPG {
 
         playrpg.start(player,monster,mine,map);
         playrpg.play(player,monster,mine,map);
+
     }
 }
