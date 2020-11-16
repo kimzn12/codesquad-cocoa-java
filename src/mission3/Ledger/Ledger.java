@@ -46,9 +46,8 @@ public class Ledger {
         initRecordDB();
         
         UserFunction.singUp();
-        UserFunction.singUp();
-
         checkLogin();
+
         while(isLogin){
             LoginUserFunction.write(user);
             LoginUserFunction.read(user);
