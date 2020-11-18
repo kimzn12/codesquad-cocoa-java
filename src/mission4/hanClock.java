@@ -2,8 +2,9 @@ package mission4;
 
 import java.util.*;
 
-public class hanClock {
-    public static void hangulClock() {
+public class hanClock implements Runnable {
+    @Override
+    public void run() {
 
         String[][] hangulClock = {{" ", " ", " ", " ", " ", " "},
                 {" ", " ", " ", " ", " ", " "},
@@ -24,9 +25,8 @@ public class hanClock {
 
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
+        int sec = cal.get(Calendar.SECOND);
         //시간 출력
-
-
         //정오
         if (hour == 12 && minute == 0) {
             hangulClock[4][0] = hangulNumber[4][0];
@@ -110,14 +110,18 @@ public class hanClock {
 
         }
         //화면 출력
-        System.out.println("===========================");
+        System.out.println("==========================");
+
         for (String[] i : hangulClock) {
             for (String j : i) {
                 System.out.printf("%s\t", j);
             }
             System.out.println();
         }
-        System.out.println("===========================");
+        System.out.println("                      " + sec);
+        System.out.println("==========================");
+
+
     }
 
 }
