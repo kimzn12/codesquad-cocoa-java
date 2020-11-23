@@ -5,14 +5,14 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.*;
+
 
 
 public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyListener : 키보드 이벤트 처리, Runnable : 스레드
     int windowWidth = 800;
     int windowHeight = 1200;
 
-    int direction = 1;
+    int direction = 1; //캐릭터 방향 초기화
 
     //키보드입력 변수
     boolean KeyUp = false;
@@ -21,6 +21,7 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
     boolean KeyRight = false;
 
     Thread thread; // 스레드 생성
+    GameTimer gameTimer = new GameTimer();
 
     Toolkit tk = Toolkit.getDefaultToolkit(); //이미지 불러오기 위한 툴킷
 
@@ -47,8 +48,7 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
     Label score = new Label();
     Label time = new Label();
 
-    Font font = new Font("Serif", Font.BOLD, 50);
-    Font font2 = new Font("Serif", Font.BOLD, 30);
+    Font font = new Font("Serif", Font.BOLD, 40);
 
 
 
@@ -68,8 +68,12 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
         setLayout(new FlowLayout()); // ? 이거 안하면 화면에 score만 뜨고 나머지 안 뜸
         add(score);
 
-        time.setFont(font2);
-        setLayout(new FlowLayout());
+        time.setFont(font);
+        //setLayout(new FlowLayout(FlowLayout.CENTER));
+        add(time);
+
+
+        //setLayout(new FlowLayout());
         add(time);
         //score.setSize(500,500);
 
@@ -123,6 +127,8 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
         else if (direction == 2) buffg.drawImage(playerImage2, player.x, player.y, this);
         else if (direction == 3) buffg.drawImage(playerImage3, player.x, player.y, this);
         else if (direction == 4) buffg.drawImage(playerImage4, player.x, player.y, this);
+
+        drawGameOver();
 
         g.drawImage(buffImage, 0, 0, null); //화면에 buff에 그린 buffImage 가져옴
 
@@ -192,9 +198,6 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
 
     }
 
-    public void updateLabel() {
-        score.setText("Score : " + player.score);
-    }
 
     //코인 생성 (분리하기)
     public void addCoinList() {
@@ -232,6 +235,19 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
         }
     }
 
+    private void updateLabel() {
+        score.setText("Score : " + player.score + " ");
+        time.setText(Integer.toString(gameTimer.getTimeCount()));
+    }
+
+    private void drawGameOver() {
+        if(gameTimer.getTimeCount() == 0){
+            buffg.setColor(Color.blue);
+            buffg.setFont(new Font("Default",Font.BOLD,100));
+            buffg.drawString("Your Score: " + player.score,50,600);
+        }
+    }
+
 
     @Override
     public void run() {
@@ -247,12 +263,18 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
                 repaint();
 
                 Thread.sleep(20);
+                if(gameTimer.checkTimeOut()) {
+                    repaint(); //안해주면 게임오버 이미지가 안 뜬다.
+                    break;
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
     }
+
+
 
 
 }
