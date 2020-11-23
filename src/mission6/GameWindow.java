@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 
 public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyListener : 키보드 이벤트 처리, Runnable : 스레드
-    int windowWidth = 800;
-    int windowHeight = 1200;
+    private static final int WINDOW_WIDTH = 800;
+    private static final int WINDOW_HEIGHT = 1200;
 
     int direction = 1; //캐릭터 방향 초기화
 
@@ -20,24 +20,32 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
     boolean KeyLeft = false;
     boolean KeyRight = false;
 
-    Thread thread; // 스레드 생성
-    GameTimer gameTimer = new GameTimer();
+    //스레드 생성
+    Thread thread; // getwindow 스레드
+    GameTimer gameTimer = new GameTimer(); //타이머 스레드
 
     Toolkit tk = Toolkit.getDefaultToolkit(); //이미지 불러오기 위한 툴킷
 
+    //이미지 가져오기
     Image backgroundImage = new ImageIcon(GameWindow.class.getResource("./image/background2.png")).getImage();
     Image playerImage1 = new ImageIcon(GameWindow.class.getResource("./image/Player1.png")).getImage(); //up
     Image playerImage2 = new ImageIcon(GameWindow.class.getResource("./image/Player2.png")).getImage(); //down
     Image playerImage3 = new ImageIcon(GameWindow.class.getResource("./image/Player3.png")).getImage(); //right
     Image playerImage4 = new ImageIcon(GameWindow.class.getResource("./image/Player4.png")).getImage(); //left
-
     Image bananaImage = new ImageIcon(GameWindow.class.getResource("./image/banana1.png")).getImage();
     Image coinImage = new ImageIcon(GameWindow.class.getResource("./image/coin1.png")).getImage();
+    Image ghostImage = new ImageIcon(GameWindow.class.getResource("./image/ghost1.png")).getImage();
 
+    //객체 선언
     Player player = new Player();
+    Ghost ghost;
     Banana banana;
     Coin coin;
 
+    int coinX;
+    int coinY;
+
+    //coin과 banana 담는 리스트
     ArrayList coinList = new ArrayList();
     ArrayList bananaList = new ArrayList();
 
@@ -45,45 +53,38 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
     Image buffImage; //buff에 그려질 이미지
     Graphics buffg; //그래픽 공간에서 그림을 그린후 한번에 화면에 출력
 
+    //score, time 화면에 출력
     Label score = new Label();
     Label time = new Label();
 
     Font font = new Font("Serif", Font.BOLD, 40);
-
-
 
     public GameWindow(String title) {
         init();
         start();
 
         setTitle(title);
-        setSize(windowWidth, windowHeight);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false); // 창 크기 고정
 
         //화면 중앙에 생성
         Dimension screenSize = tk.getScreenSize(); // 화면 크기 구하기
-        setLocation((screenSize.width / 2) - (windowWidth / 2), (screenSize.height / 2) - (windowHeight / 2)); // 중앙에 생성
+        setLocation((screenSize.width / 2) - (WINDOW_WIDTH / 2), (screenSize.height / 2) - (WINDOW_HEIGHT / 2)); // 중앙에 생성
+
+        setLayout(new FlowLayout()); //이거 안하면 화면에 score만 뜨고 나머지 안 뜸
 
         score.setFont(font); //폰트 적용
-        setLayout(new FlowLayout()); // ? 이거 안하면 화면에 score만 뜨고 나머지 안 뜸
         add(score);
 
         time.setFont(font);
-        //setLayout(new FlowLayout(FlowLayout.CENTER));
         add(time);
-
-
-        //setLayout(new FlowLayout());
-        add(time);
-        //score.setSize(500,500);
 
         setVisible(true);
     }
 
     public void init() {
-        addCoinList(); // 코인 추가
+        addCoinList();// 코인 추가
         addBananaList();//바나나 추가
-
     }
 
     //시작 처리
@@ -99,7 +100,7 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
 
 
     public void paint(Graphics g) {
-        buffImage = createImage(windowWidth, windowHeight); // buffimage의 크기를 기본 크기와 같게 설정
+        buffImage = createImage(WINDOW_WIDTH, WINDOW_HEIGHT); // buffimage의 크기를 기본 크기와 같게 설정
         buffg = buffImage.getGraphics(); //그래픽 객체 얻기
 
         update(g); //메소드 반복적으로 실행?
@@ -108,14 +109,16 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
     public void update(Graphics g) {
         // 0,0 에서 위에서 정한 해상도 크기만큼 화면을 지움
         // 이거 안하면 뒤에 창 겹쳐서 나옴.
-        buffg.clearRect(0, 0, windowWidth, windowHeight);
+        buffg.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         buffg.drawImage(backgroundImage, 0, 0, null);
 
         for (int i = 0; i < coinList.size(); i++) {
             //System.out.println(coinList.size());
             coin = (Coin) coinList.get(i);
-            buffg.drawImage(coinImage, coin.x, coin.y, this);
+            coinX = coin.getX();
+            coinY = coin.getY();
+            buffg.drawImage(coinImage, coinX, coinY,this);
         }
 
         for (int i = 0; i < bananaList.size(); i++) {
@@ -127,6 +130,8 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
         else if (direction == 2) buffg.drawImage(playerImage2, player.x, player.y, this);
         else if (direction == 3) buffg.drawImage(playerImage3, player.x, player.y, this);
         else if (direction == 4) buffg.drawImage(playerImage4, player.x, player.y, this);
+
+        buffg.drawImage(ghostImage,ghost.x,ghost.y,this);
 
         drawGameOver();
 
@@ -188,20 +193,18 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
     }
 
     public void KeyProcess() {
-//        int[] dx = {};
-//        int[] dy = {};
 
-        if (KeyUp) player.y -= 5;
-        if (KeyDown) player.y += 5;
-        if (KeyLeft) player.x -= 5;
-        if (KeyRight) player.x += 5;
+        if (KeyUp) player.y -= 12;
+        if (KeyDown) player.y += 12;
+        if (KeyLeft) player.x -= 12;
+        if (KeyRight) player.x += 12;
 
     }
 
 
     //코인 생성 (분리하기)
     public void addCoinList() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
             coin = new Coin();
             coinList.add(coin);
         }
@@ -209,7 +212,7 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
 
     //바나나 리스트 생성 (분리하기)
     public void addBananaList() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
             banana = new Banana();
             bananaList.add(banana);
         }
@@ -217,7 +220,7 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
 
 
     public void coinProcess() {
-        //코인 먹으면 코인 지우기
+        //코인 먹으면 코인 지우기, 분리하기
         for (int j = 0; j < coinList.size(); ++j) {
             coin = (Coin) coinList.get(j);
             if (player.getCoin(coin)) {
@@ -235,13 +238,21 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
         }
     }
 
+    public void ghostProcess(){
+        if(gameTimer.getTimeCount() % 5 == 0){
+            ghost = new Ghost();
+        }
+        ghost.move();
+
+    }
+
     private void updateLabel() {
         score.setText("Score : " + player.score + " ");
         time.setText(Integer.toString(gameTimer.getTimeCount()));
     }
 
     private void drawGameOver() {
-        if(gameTimer.getTimeCount() == 0){
+        if(gameTimer.getTimeCount() == 0 || player.collideGhost(ghost)){
             buffg.setColor(Color.blue);
             buffg.setFont(new Font("Default",Font.BOLD,100));
             buffg.drawString("Your Score: " + player.score,50,600);
@@ -258,12 +269,13 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
                 updateLabel();
                 coinProcess();
                 bananaProcess();
+                ghostProcess();
 
                 //repaint() > update() > paint()
                 repaint();
 
                 Thread.sleep(20);
-                if(gameTimer.checkTimeOut()) {
+                if(gameTimer.checkTimeOut() || player.collideGhost(ghost)) {
                     repaint(); //안해주면 게임오버 이미지가 안 뜬다.
                     break;
                 }

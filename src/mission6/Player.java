@@ -12,10 +12,6 @@ public class Player {
         this.y = 800;
     }
 
-    //이동
-    public void move(){
-
-    }
 
     //바나나 밟았을 때 - 랜덤으로 스코어 빼기
     public boolean stepOnBanana(Banana banana){
@@ -35,13 +31,24 @@ public class Player {
 
     //코인 먹었을 때 - 스코어 +5점
     public boolean getCoin(Coin coin){
+        int coinX  = coin.getX();
+        int coinY = coin.getY();
+
         //코인 충돌
-        if(isCollide(coin.x,coin.y)){
+        if(isCollide(coinX,coinY)){
             //코인 지우기 : main쪽에 있음
             //점수 획득
             this.score += 5;
             System.out.println(this.score);
 
+            return true;
+        }
+        return false;
+    }
+
+    //귀신이랑 부딪혔을 때
+    public boolean collideGhost(Ghost ghost){
+        if(isCollide(ghost.x,ghost.y)){
             return true;
         }
         return false;
