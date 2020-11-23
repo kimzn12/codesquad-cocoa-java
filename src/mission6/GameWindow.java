@@ -21,9 +21,8 @@ public class GameWindow extends JFrame implements KeyListener,Runnable { //KeyLi
 
     Thread thread; // 스레드 생성
 
-   Toolkit tk = Toolkit.getDefaultToolkit(); //이미지 불러오기 위한 툴킷
+    Toolkit tk = Toolkit.getDefaultToolkit(); //이미지 불러오기 위한 툴킷
 
-    //Image playerImage  = tk.getImage("mycar11.png");
     Image backgroundImage = new ImageIcon(GameWindow.class.getResource("./image/background2.png")).getImage();
     Image playerImage1 = new ImageIcon(GameWindow.class.getResource("./image/Player1.png")).getImage(); //up
     Image playerImage2 = new ImageIcon(GameWindow.class.getResource("./image/Player2.png")).getImage(); //down
@@ -34,12 +33,15 @@ public class GameWindow extends JFrame implements KeyListener,Runnable { //KeyLi
     Image coinImage = new ImageIcon(GameWindow.class.getResource("./image/coin1.png")).getImage();
 
     Player player = new Player();
-    //Banana banana = new Banana(bananaImage);
     Banana banana;
     Coin coin;
 
     ArrayList coinList = new ArrayList();
     ArrayList bananaList = new ArrayList();
+
+    //더블버퍼링
+    Image buffImage; //buff에 그려질 이미지
+    Graphics buffg; //그래픽 공간에서 그림을 그린후 한번에 화면에 출력
 
     Label score = new Label();
     Font font = new Font("Serif", Font.BOLD, 50);
@@ -83,28 +85,36 @@ public class GameWindow extends JFrame implements KeyListener,Runnable { //KeyLi
 
 
     public void paint(Graphics g){
+        buffImage = createImage(windowWidth,windowHeight); // buffimage의 크기를 기본 크기와 같게 설정
+        buffg = buffImage.getGraphics(); //그래픽 객체 얻기
+
+        update(g); //메소드 반복적으로 실행?
+    }
+
+    public void update(Graphics g){
         // 0,0 에서 위에서 정한 해상도 크기만큼 화면을 지움
         // 이거 안하면 뒤에 창 겹쳐서 나옴.
-        g.clearRect(0, 0, windowWidth, windowHeight);
+        buffg.clearRect(0, 0, windowWidth, windowHeight);
 
-        g.drawImage(backgroundImage, 0, 0, null);
+        buffg.drawImage(backgroundImage, 0, 0, null);
 
         for(int i = 0; i < coinList.size(); i ++){
             System.out.println(coinList.size());
             coin = (Coin)coinList.get(i);
-            g.drawImage(coinImage, coin.x, coin.y, this);
+            buffg.drawImage(coinImage, coin.x, coin.y, this);
         }
 
         for(int i = 0; i < bananaList.size();i++){
             banana = (Banana)bananaList.get(i);
-            g.drawImage(bananaImage, banana.x, banana.y, this);
+            buffg.drawImage(bananaImage, banana.x, banana.y, this);
         }
 
-        if(direction == 1) g.drawImage(playerImage1, player.x, player.y, this);
-        else if(direction == 2) g.drawImage(playerImage2, player.x, player.y, this);
-        else if(direction == 3) g.drawImage(playerImage3, player.x, player.y, this);
-        else if(direction == 4) g.drawImage(playerImage4, player.x, player.y, this);
+        if(direction == 1) buffg.drawImage(playerImage1, player.x, player.y, this);
+        else if(direction == 2) buffg.drawImage(playerImage2, player.x, player.y, this);
+        else if(direction == 3) buffg.drawImage(playerImage3, player.x, player.y, this);
+        else if(direction == 4) buffg.drawImage(playerImage4, player.x, player.y, this);
 
+        g.drawImage(buffImage,0,0,null); //화면에 buff에 그린 buffImage 가져옴
 
     }
 
@@ -219,13 +229,13 @@ public class GameWindow extends JFrame implements KeyListener,Runnable { //KeyLi
         try{
             while(true){
                 KeyProcess();
-                //System.out.println("coin: " + coin.x + " " + coin.y);
-                //System.out.println("player: " +player.x + " " + player.y);
+
                 updateLabel();
                 coinProcess();
                 bananaProcess();
 
-                repaint(); //다시 그리기
+                //repaint() > update() > paint()
+                repaint();
 
                 Thread.sleep(20); // 왜 깜빡이누..
             }
