@@ -121,7 +121,6 @@ public class hanClock implements Runnable {
         System.out.println("                      " + sec);
         System.out.println("==========================");
 
-
     }
 
 }

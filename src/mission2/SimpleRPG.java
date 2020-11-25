@@ -127,7 +127,7 @@ class Mine {
         Random random = new Random();
 
         for (;;){
-            this.mineX = random.nextInt(11); // bound 왜 생기는거지
+            this.mineX = random.nextInt(11);
             this.mineY = random.nextInt(11);
 
             if((this.mineX == p.playerX)&&(this.mineY == p.playerY)) continue;
