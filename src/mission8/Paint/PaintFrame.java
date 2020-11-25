@@ -5,7 +5,13 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class PaintFrame extends JFrame {
-    public int startX, startY, endX, endY;
+    private int startX, startY, endX, endY;
+
+    private boolean drawLine = false;
+    private boolean drawOval = false;
+    private boolean drawRect = false;
+    private boolean drawFreeLine = false;
+    private boolean clear = true;
 
     Button bFreeLine = new Button("Pencil");
     Button bLine = new Button("Line");
@@ -13,13 +19,7 @@ public class PaintFrame extends JFrame {
     Button bRect = new Button("Rectangle");
     Button bClear = new Button("clear");
 
-    JPanel panel;
-
-    boolean drawLine = false;
-    boolean drawOval = false;
-    boolean drawRect = false;
-    boolean drawFreeLine = false;
-    boolean clear = true;
+    JPanel panel = new JPanel(new FlowLayout());
 
     public PaintFrame(String title) {
         //윈도우 설정
@@ -28,23 +28,17 @@ public class PaintFrame extends JFrame {
         setSize(1200, 1200);
         setLayout(new BorderLayout());
 
-        //패널 생성
-        panel = new JPanel(new FlowLayout());
-        panel.setBackground(Color.BLACK);
-
-        //라디오버튼 생성
-        makeRadioButton();
+        //버튼
+        makeButton();
 
         //이벤트 리스너 추가
-        addMouseMotionListener(new MyMouseMotionListener());
-        addMouseListener(new MyMouseListener());
-
+        addMyListener();
 
         setVisible(true);
     }
 
-    //라디오 버튼 생성,리스너추가
-    public void makeRadioButton() {
+    //라디오 버튼 추가,리스너 등록
+    public void makeButton() {
         //리스너 등록
         bOval.addActionListener(e -> {
             drawOval = true;
@@ -94,56 +88,57 @@ public class PaintFrame extends JFrame {
         panel.add(bRect);
         panel.add(bClear);
 
-        //add(radioPanel,BorderLayout.NORTH);
         add("North", panel);
 
     }
 
-    //내부 클래스로 리스너 구현
-    class MyMouseListener extends MouseAdapter { // 도형그릴 때
-        @Override
-        public void mousePressed(MouseEvent e) {
-            System.out.println("pressed");
-            startX = e.getX();
-            startY = e.getY();
-        }
+    public void addMyListener(){
+        addMouseMotionListener(new MouseMotionAdapter() {
+           @Override
+           public void mouseDragged(MouseEvent e) {
+               super.mouseDragged(e); //?
+               if(drawFreeLine){
+                   startX = e.getX();
+                   startY = e.getY();
+                   repaint();
+               }
+           }
+        });
 
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            System.out.println("Released");
-            endX = e.getX();
-            endY = e.getY();
-            repaint();
-        }
-
-    }
-
-    class MyMouseMotionListener extends MouseMotionAdapter {  // 자유선그릴때
-
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            if(drawFreeLine){
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                System.out.println("pressed");
                 startX = e.getX();
                 startY = e.getY();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                System.out.println("Released");
+                endX = e.getX();
+                endY = e.getY();
                 repaint();
             }
-        }
+        });
+
     }
+
+
 
     public void paint(Graphics g) {
 
         g.setColor(Color.BLACK);
 
+        //화면 지우기
         if(clear){
             g.clearRect(0, 0, 1200, 1200); //화면지우는코드
         }
 
+        //연필
         if (drawFreeLine) {
-
             g.drawString("●", startX, startY);
-
-//            g.drawString("●", startX, startY);
-//            g.drawString("●", startX+1, startY+1);
         }
 
         //직선
