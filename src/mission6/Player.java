@@ -39,7 +39,7 @@ public class Player {
             //코인 지우기 : main쪽에 있음
             //점수 획득
             this.score += 5;
-            System.out.println(this.score);
+            //System.out.println(this.score);
 
             return true;
         }

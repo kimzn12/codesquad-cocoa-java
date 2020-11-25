@@ -93,7 +93,7 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //키보드
-        addKeyListener(this); //키보드 이벤트 실행
+        addKeyListener(this); //이벤트 리스너 :키보드 이벤트 실행
         thread = new Thread(this); //스레드 생성,실행
         thread.start();
     }
@@ -239,9 +239,15 @@ public class GameWindow extends JFrame implements KeyListener, Runnable { //KeyL
     }
 
     public void ghostProcess(){
-        if(gameTimer.getTimeCount() % 5 == 0){
+        if (ghost == null){
             ghost = new Ghost();
         }
+        else{
+            if(gameTimer.getTimeCount() % 5 == 1){
+                ghost = new Ghost();
+            }
+        }
+
         ghost.move();
 
     }

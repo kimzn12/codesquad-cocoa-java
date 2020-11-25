@@ -1,12 +1,8 @@
 package mission6;
 
-import mission4.MyCalender;
-
-import java.util.Scanner;
-
 public class GameTimer implements Runnable {
     Thread thread;
-    private int timeCount = 20;
+    private int timeCount = 50;
 
 
     public GameTimer(){

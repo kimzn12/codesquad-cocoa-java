@@ -2,7 +2,8 @@ package mission6;
 
 import java.util.Random;
 
-public class Ghost {
+public class Ghost{
+    Thread thread;
     int x, y;
 
     public Ghost(){
@@ -17,5 +18,4 @@ public class Ghost {
             this.y += 20;
         }
     }
-
 }
