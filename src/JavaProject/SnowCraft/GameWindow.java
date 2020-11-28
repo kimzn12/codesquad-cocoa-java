@@ -19,7 +19,7 @@ public class GameWindow extends JFrame implements Runnable {
     //private Input input; //input 리스너 클래스 분리 못하겠음..
 
     BufferedImage pImage;
-    //BufferedImage sImage;
+    BufferedImage sImage;
 
     private boolean pressedPlayer = false;
     private boolean attack = false;
@@ -45,28 +45,23 @@ public class GameWindow extends JFrame implements Runnable {
                 System.out.println("Released");
                 if(pressedPlayer){
                     attack = true;
-                    player.throwSnow();
+                    player.initSnowball(); // 눈 좌표 초기화
                 }
                 //초기화
                 pressedPlayer = false;
-
             }
 
             @Override
             public void mousePressed(MouseEvent e){
                 attack = false; //초기화
                 super.mouseClicked(e);
-                System.out.println("mouse" + e.getX()+ " " + e.getY());
-                System.out.println("X범위 " + player.getX() + " " + (player.getX() + pImage.getWidth()) );
-                System.out.println("Y범위 " + player.getY() + " " + (player.getY() + pImage.getHeight()) );
 
                 //캐릭터 눌렀을 경우
                 if(e.getX() > player.getX() && e.getX() < (player.getX() + pImage.getWidth()) &&
                         e.getY() > player.getY()  && e.getY() < (player.getY() + pImage.getHeight())){
                     pressedPlayer = true;
-                }
 
-                System.out.println(pressedPlayer);
+                }
             }
         });
 
@@ -87,8 +82,9 @@ public class GameWindow extends JFrame implements Runnable {
     }
 
     private void initPlayer(){
-        player = new Player();
+        player = new Player(1800,900);
         pImage = player.getPlayerImage();
+        sImage = player.snowball.getSnowballImage();
     }
 
 //    private void initSnowball(){
@@ -97,7 +93,7 @@ public class GameWindow extends JFrame implements Runnable {
 //    }
 
 
-
+    //background 이미지 로드
     private void loadImage() {
         //background이미지 다시작성
         try {
@@ -127,10 +123,16 @@ public class GameWindow extends JFrame implements Runnable {
 
         g.drawImage(pImage,player.getX(),player.getY(),this);
         if(attack){
-            System.out.println("make snowball image");
-            g.drawImage(player.sImage,player.snowball.getX(),player.snowball.getY(), this);
+            g.drawImage(sImage,player.snowball.getX(),player.snowball.getY(), this);
         }
 
+    }
+
+    private void attackProcess(){
+        if(attack) {
+
+            player.throwSnow();
+        }
     }
 
     public static void main(String[] args){
@@ -146,6 +148,7 @@ public class GameWindow extends JFrame implements Runnable {
     @Override
     public void run(){
         while(true){
+            attackProcess(); //0.3초 후에 실행되게 해야함
             update();
             try {
                 Thread.sleep(20);

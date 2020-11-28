@@ -10,14 +10,12 @@ public class Player {
     private int x;
     private int y;
 
-    public BufferedImage sImage;
-    Snowball snowball = new Snowball();
+    Snowball snowball;
 
-    public Player(){
-        this.x = 1800;
-        this.y = 900;
-        snowball.setX(this.x);
-        snowball.setY(this.y);
+    public Player(int x, int y){
+        this.x = x;
+        this.y = y;
+        snowball= new Snowball();
         //loadImage();
         //getPlayerImage();
     }
@@ -37,8 +35,6 @@ public class Player {
     public void setY(int i){
         this.y = i;
     }
-
-
 
 //    public BufferedImage getImage(long frame){
 //        //TODO: ?
@@ -62,15 +58,12 @@ public class Player {
     }
 
     public void throwSnow(){
-        System.out.println("Attack!");
-
-        sImage = snowball.getSnowballImage();
-
-        snowball.setX(snowball.getX() - 100);
-        snowball.setY(snowball.getY() - 100);
+        snowball.move();
     }
 
-
-
+    public void initSnowball(){
+        snowball.x = this.x;
+        snowball.y = this.y;
+    }
 
 }

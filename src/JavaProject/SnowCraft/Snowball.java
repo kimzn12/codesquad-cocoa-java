@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Snowball {
-    private int x;
-    private int y;
+    public int x;
+    public int y;
 
     public Snowball(){
         //getSnowballImage();
@@ -23,6 +23,17 @@ public class Snowball {
         }
     }
 
+    //날라가기
+    public void move(){
+        if (this.x > 0){
+            this.x -= 50;
+            this.y -= 50;
+        }
+
+        System.out.println("after move " + this.x + " " + this.y);
+
+    }
+
     public int getX(){
         return this.x;
     }
@@ -31,17 +42,6 @@ public class Snowball {
         return this.y;
     }
 
-    public void setX(int i){
-        this.x = i;
-    }
-
-    public void setY(int i){
-        this.y = i;
-    }
-
     //이미지 생성
-
-
-    //날라가기
 }
 
