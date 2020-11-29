@@ -20,19 +20,6 @@ public class CardDeck {
         shuffleCards();
 
         //TODO:생성자에서 이걸 가지고 있어야 하나...
-        createMainCardList();
-        createHoldingCardList();
-    }
-
-
-    //mainCardList에 20개 카드 , holdingCard에 28개 카드 주기
-    public List<Card> getMainCardList() {
-        //createMainCardList(); //TODO:생성자에 있어야하는지, getter에 있어야하는지?
-        return mainCardList;
-    }
-
-    public List<Card> getHoldingCardList() {
-        return holdingCardList;
     }
 
     //48개 카드 생성
@@ -51,24 +38,26 @@ public class CardDeck {
     private void shuffleCards() {
         Collections.shuffle(cards);
     }
+    //mainCardList에 20개 카드 , holdingCard에 28개 카드 주기
 
     //maincardlist 생성
-    private void createMainCardList() {
+    public List<Card> getMainCardList() {
         mainCardList = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
             mainCardList.add(cards.get(i));
         }
+        return mainCardList;
     }
 
     //holdingcardlist 생성
-    private void createHoldingCardList() {
-        holdingCardList = new ArrayList<>();
+    public List<Card> getHoldingCardList() {
+        holdingCardList = new LinkedList<>();
 
         for (int i = 20; i < cards.size(); i++) {
             holdingCardList.add(cards.get(i));
         }
-
+        return holdingCardList;
     }
 
 }

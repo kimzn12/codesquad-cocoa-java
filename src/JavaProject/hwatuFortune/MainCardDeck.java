@@ -12,15 +12,12 @@ public class MainCardDeck {
     private ArrayList<Stack<Card>> board = new ArrayList<>();
     private static final int SIZE = 5;
 
-    CardDeck cardDeck = new CardDeck(); //TODO: cardDeck을 알 필요가 없으니 이렇게 하면 안될듯.
-
-
-    public MainCardDeck() {
-        createBoard();
+    public MainCardDeck(CardDeck cardDeck) {
+        createBoard(cardDeck);
     }
 
 
-    private void createBoard() { //4*5
+    private void createBoard(CardDeck cardDeck) { //4*5
         //stack 4개 만들기
         for (int i = 0; i < 4; i++) {
             Stack<Card> line = new Stack<>();
@@ -28,7 +25,7 @@ public class MainCardDeck {
         }
 
         // 20개 카드 받아오기
-        List<Card> mainCardList = this.cardDeck.getMainCardList(); //TODO: 바꾸기
+        List<Card> mainCardList = cardDeck.getMainCardList(); //TODO: 바꾸기
 
         //1차원 리스트 >> 2차원 리스트
         for (int i = 0; i < mainCardList.size(); i++) {
@@ -52,30 +49,24 @@ public class MainCardDeck {
                     //line4.push(mainCardList.get(i));
                     break;
             }
-
         }
-
-//        for (Card c: line1){
-//            System.out.println(c.getMonth() + " " + c.getCardNumber());
-//        }
     }
 
     //카드 선택
     //플레이어가 카드 선택하게하기
     public Card selectCard(int column) { //열(column)
         Stack<Card> line = board.get(column);
-        return line.get(line.size() - 1); // 마지막 인덱스의 카드
+        return line.peek(); // 마지막 인덱스의 카드 조회
     }
 
     //카드 뽑기
-    private void popCard(int column) { //선택한 열의 카드 뽑기
+    public void popCard(int column) { //선택한 열의 카드 뽑기
         //TODO: 만약 짝이 맞다면 실행 (다른 클래스(rule)에서 조건 확인)
         Stack<Card> line = board.get(column);
-
         line.pop();
-        for (Card c : line) {
-            System.out.println(c.getMonth() + " " + c.getCardNumber());
-        }
+//        for (Card c : line) {
+//            System.out.println(c.getMonth() + " " + c.getCardNumber());
+//        }
     }
 
 
