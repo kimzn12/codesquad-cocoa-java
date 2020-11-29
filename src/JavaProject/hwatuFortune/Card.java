@@ -4,6 +4,11 @@ public class Card {
     private int month;
     private int cardNumber;
 
+    public Card(int month, int cardNumber){
+        this.month = month;
+        this.cardNumber = cardNumber;
+    }
+
     public int getMonth() {
         return month;
     }

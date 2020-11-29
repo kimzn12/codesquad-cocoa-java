@@ -3,8 +3,10 @@ package JavaProject.hwatuFortune;
 import java.util.List;
 
 public class Player {
-    //손에 들고 있는 카드들 , 이거 클래스로 빼야 할 지 모르겠음
+
+    //TODO:손에 들고 있는 카드들 , 이거 클래스로 빼야 할 지 모르겠음
     private List<Card> holdingCardList;
+
 
     //카드 뽑기
 
