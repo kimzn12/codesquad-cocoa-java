@@ -18,8 +18,6 @@ public class CardDeck {
     public CardDeck() {
         createCards();
         shuffleCards();
-
-        //TODO:생성자에서 이걸 가지고 있어야 하나...
     }
 
     //48개 카드 생성

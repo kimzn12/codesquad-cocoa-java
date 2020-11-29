@@ -6,11 +6,20 @@ public class Game {
         System.out.println("Game start!");
 
         CardDeck cardDeck = new CardDeck();
-//        Player player = new Player();
-//        Rule rule = new Rule();
-  //      MainCardDeck mainCardDeck = new MainCardDeck(cardDeck);
+        Player player = new Player();
         HoldingCardDeck holdingCardDeck = new HoldingCardDeck(cardDeck);
-        holdingCardDeck.getCard();
+        DrawnCardDeck drawnCardDeck = new DrawnCardDeck();
+
+        /*
+            //holdingcardDeck, DrawnCardDeck확인
+
+            player.drawCard(holdingCardDeck);
+            drawnCardDeck.putCard(player);
+        */
+
+
+
+
 
     }
 }

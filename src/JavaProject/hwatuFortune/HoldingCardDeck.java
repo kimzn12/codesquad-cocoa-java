@@ -14,13 +14,13 @@ public class HoldingCardDeck {
     public HoldingCardDeck(CardDeck cardDeck){
         List<Card> holdingCardList = cardDeck.getHoldingCardList();
         holdingCardQueue.addAll(holdingCardList);
-        System.out.println(holdingCardQueue.peek().getMonth());
     }
 
     //플레이어에게 카드 주기
     public Card getCard(){
-        return holdingCardQueue.poll(); //index 0 반환하고 없애기
-
+        Card card = holdingCardQueue.poll();
+        System.out.println("홀딩카드: " + card.getMonth());
+        //return holdingCardQueue.poll(); //index 0 반환하고 없애기
+        return card;
     }
-
 }

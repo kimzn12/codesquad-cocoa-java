@@ -3,17 +3,18 @@ package JavaProject.hwatuFortune;
 import java.util.List;
 
 public class Player {
-
-    //TODO:손에 들고 있는 카드들 , 이거 클래스로 빼야 할 지 모르겠음
-    private List<Card> holdingCardList;
+    public Card drawnCard;
 
 
-    //카드 뽑기
+    //holding card deck에서 카드 뽑기
+    public void drawCard(HoldingCardDeck holdingCardDeck){
+        drawnCard = holdingCardDeck.getCard();
+    }
 
-
-    // 카드 holdingCard에 놓기
-    public Card getCard(){
-        return null;
+    //뽑은 카드 drawn card list에 내려 놓기
+    public Card getHoldingCard() {
+        System.out.println("플레이어가 뽑은 카드: " + drawnCard.getMonth());
+        return drawnCard;
     }
 
     // 카드 선택 (다른 리스트에서)
