@@ -18,9 +18,7 @@ public class HoldingCardDeck {
 
     //플레이어에게 카드 주기
     public Card getCard(){
-        Card card = holdingCardQueue.poll();
-        System.out.println("홀딩카드: " + card.getMonth());
-        //return holdingCardQueue.poll(); //index 0 반환하고 없애기
-        return card;
+        //여기서 혹시 nullpointer오류날수도 있음.
+        return holdingCardQueue.poll();
     }
 }

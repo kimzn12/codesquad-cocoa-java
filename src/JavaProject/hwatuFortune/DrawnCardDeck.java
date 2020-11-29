@@ -37,7 +37,8 @@ public class DrawnCardDeck {
     public void putCard(Player player){
         Card card = player.getHoldingCard();
         drawCardList.add(card);
-        System.out.println("drawncardlist에 들어있는 카드: " + drawCardList.peekFirst().getMonth());
+        //System.out.println("drawncardlist에 들어있는 카드: " + drawCardList.peekFirst().getMonth());
+        //위에 sout: nullpointerException날수도 있다는데 왜??
     }
 
 

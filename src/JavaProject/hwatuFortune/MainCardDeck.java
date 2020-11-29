@@ -11,6 +11,7 @@ import java.util.Stack;
 public class MainCardDeck {
     private ArrayList<Stack<Card>> board = new ArrayList<>();
     private static final int SIZE = 5;
+    private boolean isFront = false;
 
     public MainCardDeck(CardDeck cardDeck) {
         createBoard(cardDeck);
@@ -67,6 +68,16 @@ public class MainCardDeck {
 //        for (Card c : line) {
 //            System.out.println(c.getMonth() + " " + c.getCardNumber());
 //        }
+    }
+
+    //카드 뒤집기
+    private void openCard(){
+        //마지막 카드모음
+        Card[] lastCards = new Card[4];
+        for(int i = 0; i < board.size(); i++){
+            lastCards[i] = board.get(i).peek();
+        }
+        //TODO: 마지막 카드이면 앞 면을 보여야함.
     }
 
 

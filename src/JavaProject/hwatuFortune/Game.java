@@ -17,9 +17,10 @@ public class Game {
             drawnCardDeck.putCard(player);
         */
 
-
-
-
-
     }
+
+    private void PlayerProcess(){
+        //TODO:
+    }
+
 }

@@ -6,9 +6,11 @@ public class Rule {
         return false;
     }
 
-    //리턴 타입 바꾸기
-    public void getTodayCard(){
 
+    public int getTodayCard(){
+        //TODO: 월 반환
+        return 0;
     }
+
 
 }

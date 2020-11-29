@@ -4,6 +4,11 @@ import java.util.List;
 
 public class Player {
     public Card drawnCard;
+    private Card[] pairedCard;
+
+    public Player(){
+        this.pairedCard = new Card[2];
+    }
 
 
     //holding card deck에서 카드 뽑기
@@ -18,5 +23,13 @@ public class Player {
     }
 
     // 카드 선택 (다른 리스트에서)
+
+    // 선택한 카드 짝이 맞는지 확인
+
+
+    //짝이 맞춰진 카드들 paired card에 놓기
+    private void putPairedCards(PairedCardDeck pairedCardDeck) {
+        pairedCardDeck.addPairedCard(pairedCard);
+    }
 
 }
