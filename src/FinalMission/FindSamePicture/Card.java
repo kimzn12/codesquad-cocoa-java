@@ -1,6 +1,7 @@
 package FinalMission.FindSamePicture;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class Card {
 
 
     //이미지 로드
-    public BufferedImage getPlayerImage(){
+    public BufferedImage getImage(){
         String path = "./src/FinalMission/image/CardImage/";
         String name = Integer.toString(this.month);
         String ext = ".png";
@@ -45,4 +46,14 @@ public class Card {
             return null;
         }
     }
+
+//    public ImageIcon getCardImage(int month){
+//        String path = "./src/FinalMission/image/CardImage/";
+//        String name = Integer.toString(month);
+//        String ext = ".png";
+//
+//        ImageIcon imageIcon= new ImageIcon(path + name + ext);
+//
+//        return imageIcon;
+//    }
 }

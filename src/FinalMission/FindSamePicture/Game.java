@@ -4,7 +4,7 @@ public class Game {
 
 
     public void play(){
-        CardDeck cardDeck = new CardDeck();
+        //CardDeck cardDeck = new CardDeck();
         GameWindow gameWindow = new GameWindow();
 
 

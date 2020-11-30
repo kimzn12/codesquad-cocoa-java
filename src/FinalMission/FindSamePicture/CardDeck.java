@@ -22,6 +22,10 @@ public class CardDeck {
         printBoard();
     }
 
+    public List<Card> getCards(){
+        return cards;
+    }
+
     private void createCards() {
 
         for (int month = 1; month <= MONTH; month++) {
