@@ -9,12 +9,12 @@ public class CardDeck {
     private static final int CARD_NUMBER = 2; //카드 2개
     private static final int BOARD_SIZE = 4;
     private List<Card> cards;
-    private Card[][] board;
+    public Card[][] board;
 
 
     public CardDeck() {
         cards = new ArrayList<>();
-        board = new Card[4][4];
+        board = new Card[BOARD_SIZE][BOARD_SIZE];
 
         createCards();
         shuffleCards();
