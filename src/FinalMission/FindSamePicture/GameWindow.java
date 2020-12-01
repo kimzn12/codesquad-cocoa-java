@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -115,23 +114,31 @@ public class GameWindow extends JFrame {
             jCenter.add(cardButtons[i]);
 
             cardButtons[i].addActionListener(new ActionListener() {
+
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     //누르면 인덱스 출력
-                    clickedCardIndex = IndexOfClickedCard(e.getSource());
-                    //눌르면 앞 장 보여라
-                    //showFrontImage();
-                    showClickFrontImage(clickedCardIndex);
-                    settingFirstnSecondCardMonth();
-                    compareCard();
+                    clickedCardIndex = IndexOfClickedButton(e.getSource()); //여기 다시공부
+                    //내가 누른 버튼의 카드
+                    Card clickedCard = getCardOfClickedButton(clickedCardIndex);
+                    System.out.println("내가 누른 카드: " + clickedCard.toString() + ", 카드 닫혀있나?: " + clickedCard.isClose);
+
+                    //뒷 면일 경우만 반응
+                    if(clickedCard.isClose){
+                        showClickFrontImage(clickedCardIndex,clickedCard);
+                        settingFirstnSecondCardMonth();
+                        compareCard();
+                    }
+
                 }
 
             });
         }
     }
 
-    //카드의 인덱스를 리턴한다.
-    private int IndexOfClickedCard(Object source) {
+    //클릭한 버튼의 인덱스를 리턴한다.
+    private int IndexOfClickedButton(Object source) {
         for (int i = 0; i < BOARD_SIZE; i++) {
             if (source.equals(cardButtons[i])) {
                 return i;
@@ -139,6 +146,8 @@ public class GameWindow extends JFrame {
         }
         return -1;
     }
+
+
 
     //    public void update() {
 //        repaint();
@@ -218,21 +227,31 @@ public class GameWindow extends JFrame {
 
     }
 
-    private int getMonth(int cardIndex){
-        return cardDeck.getCards().get(cardIndex).getMonth(); //TODO:이렇게하면 안된다고 들었음
+    //클릭한 버튼의 카드를 리턴한다.
+    private Card getCardOfClickedButton(int cardIndex){
+        Card cardOfClickedButton = cardDeck.getCards().get(cardIndex);
+
+        return cardOfClickedButton;
     }
 
-    private void showClickFrontImage(int index) {
+    private int getMonth(int cardIndex){
+        Card card = getCardOfClickedButton(cardIndex);
+        return card.getMonth();
+    }
+
+
+
+    private void showClickFrontImage(int index, Card card) {
+        card.isClose = false; // 카드 열림
         clickedCardMonth = getMonth(index);
         ImageIcon imageIcon = getCardImage(clickedCardMonth); //월 그림 출력
         cardButtons[index].setIcon(imageIcon);
 
-        System.out.println("선택한카드의 달: " + clickedCardMonth); //TODO:지우기
     }
 
 
 //    private void showOneFrontImage(){
-//        int month = cardDeck.getCards().get(i).getMonth(); //TODO:이렇게하면 안된다고 들었음
+//        int month = cardDeck.getCards().get(i).getMonth();
 //        ImageIcon imageIcon = getCardImage(month); //월 그림 출력
 //        cardButtons[i].setIcon(imageIcon);
 //
@@ -257,7 +276,9 @@ public class GameWindow extends JFrame {
             if (FirstCard.getMonth() != SecondCard.getMonth()) {
                 System.out.println("카드 다름!");
                 showOneBackImage(FirstCardIndex);
+                FirstCard.isClose  = true;
                 showOneBackImage(SecondCardIndex);
+                SecondCard.isClose = true;
             }
             else{
                 System.out.println("카드 같음!");
@@ -265,8 +286,9 @@ public class GameWindow extends JFrame {
             //초기화
             FirstCard = null;
             SecondCard = null;
+
         }
-        System.out.println("아직 선택 다 안함");
+
     }
 
     private void settingFirstnSecondCardMonth(){ //TODO:변수명 바꾸기

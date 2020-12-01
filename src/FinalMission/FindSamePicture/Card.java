@@ -9,12 +9,12 @@ import java.io.IOException;
 public class Card {
     private int month;
     private int cardNumber;
-    private boolean isOpen;
+    public boolean isClose;
 
     public Card(int month, int cardNumber){
         this.month = month;
         this.cardNumber = cardNumber;
-        this.isOpen = false;
+        this.isClose = true;
     }
 
     public int getMonth() {
