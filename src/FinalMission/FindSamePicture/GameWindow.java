@@ -195,7 +195,7 @@ public class GameWindow extends JFrame {
 
     private boolean checkGameClear() {
         for (int i = 0; i < BOARD_SIZE; i++) {
-            if (cardDeck.getCardList().get(i).isClose) {
+            if (getClickedCard(i).isClose) {
                 return false;
             }
         }
@@ -232,10 +232,10 @@ public class GameWindow extends JFrame {
 
     private void setFirstAndSecondCard() {
         if (FirstCard == null) {
-            FirstCard = cardDeck.getCard(clickedCardIndex);
+            FirstCard = getClickedCard(clickedCardIndex);
             FirstCardIndex = clickedCardIndex;
         } else if (SecondCard == null) {
-            SecondCard = cardDeck.getCard(clickedCardIndex);
+            SecondCard = getClickedCard(clickedCardIndex);
             SecondCardIndex = clickedCardIndex;
         }
 
