@@ -8,12 +8,12 @@ public class CardDeck {
     private static final int MONTH = 8; //12월까지
     private static final int CARD_NUMBER = 2; //카드 2개
     private static final int BOARD_SIZE = 4;
-    private List<Card> cards;
+    private List<Card> cardList;
     public Card[][] board;
 
 
     public CardDeck() {
-        cards = new ArrayList<>();
+        cardList = new ArrayList<>();
         board = new Card[BOARD_SIZE][BOARD_SIZE];
 
         createCards();
@@ -22,8 +22,15 @@ public class CardDeck {
         printBoard();
     }
 
-    public List<Card> getCards(){
-        return cards;
+    //카드를 리턴한다.
+    public Card getCard(int cardIndex) {
+        Card card = getCardList().get(cardIndex);
+
+        return card;
+    }
+
+    public List<Card> getCardList(){
+        return cardList;
     }
 
     private void createCards() {
@@ -31,21 +38,20 @@ public class CardDeck {
         for (int month = 1; month <= MONTH; month++) {
             for (int cardNumber = 1; cardNumber <= CARD_NUMBER; cardNumber++) {
                 Card card = new Card(month, cardNumber);
-                cards.add(card);
+                cardList.add(card);
             }
         }
     }
 
-
     //카드 섞기
     private void shuffleCards() {
-        Collections.shuffle(cards);
+        Collections.shuffle(cardList);
     }
 
     private void createBoard() {
         for(int i  = 0; i < BOARD_SIZE; i++){
             for(int j = 0 ; j < BOARD_SIZE; j++){
-                board[i][j] = cards.get((i * BOARD_SIZE) + j);
+                board[i][j] = cardList.get((i * BOARD_SIZE) + j);
             }
         }
     }
@@ -67,7 +73,7 @@ public class CardDeck {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for(Card card : cards){
+        for(Card card : cardList){
             sb.append(card.toString());
             sb.append("\n");
         }
