@@ -24,9 +24,7 @@ public class CardDeck {
 
     //카드를 리턴한다.
     public Card getCard(int cardIndex) {
-        Card card = getCardList().get(cardIndex);
-
-        return card;
+        return getCardList().get(cardIndex);
     }
 
     public List<Card> getCardList(){

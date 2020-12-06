@@ -16,7 +16,7 @@ public class GameWindow extends JFrame {
 
     private BufferedImage background;
 
-    private CardDeck cardDeck = new CardDeck(); //TODO: 이거 분리하고 싶었음
+    private CardDeck cardDeck = new CardDeck();
 
     private JButton[] cardButtons;
 
@@ -25,6 +25,7 @@ public class GameWindow extends JFrame {
     private int clickedCardIndex;
     private int FirstCardIndex;
     private int SecondCardIndex;
+
 
 
     public GameWindow() {
@@ -38,13 +39,16 @@ public class GameWindow extends JFrame {
 
     }
 
+    public void paint(Graphics g) {
+        g.drawImage(background,0,0,this);
+    }
+
     //background 이미지 로드
     private void loadBackgroundImage() {
         try {
-            File f = new File("./");
             background = ImageIO.read(new File("./src/FinalMission/image/background2.png"));
         } catch (IOException e) {
-            System.exit(1); //1은 무슨 의미인가?
+            System.exit(1);
         }
     }
 
@@ -130,9 +134,6 @@ public class GameWindow extends JFrame {
     }
 
 
-    public void paint(Graphics g) {
-        g.drawImage(background, 0, 0, this);
-    }
 
 
     //전체 카드 뒷장 이미지 보이기
@@ -169,13 +170,13 @@ public class GameWindow extends JFrame {
             @Override
             public void run() {
                 for (int i = 0; i < BOARD_SIZE; i++) {
-                    int month = cardDeck.getCardList().get(i).getMonth(); //TODO:이렇게하면 안된다고 들었음
+                    int month = getClickedCard(i).getMonth();
                     ImageIcon imageIcon = getCardImage(month); //월 그림 출력
                     cardButtons[i].setIcon(imageIcon);
                 }
             }
         };
-        timer.schedule(timerTask, 20);
+        timer.schedule(timerTask, 50);
     }
 
     //클릭한 카드의 앞 면 보이기
@@ -239,6 +240,5 @@ public class GameWindow extends JFrame {
         }
 
     }
-
 
 }
