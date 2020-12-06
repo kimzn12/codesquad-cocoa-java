@@ -3,8 +3,6 @@ package FinalMission.FindSamePicture;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +42,6 @@ public class GameWindow extends JFrame {
     private void loadBackgroundImage() {
         try {
             File f = new File("./");
-            System.out.println(f.getAbsolutePath());
             background = ImageIO.read(new File("./src/FinalMission/image/background2.png"));
         } catch (IOException e) {
             System.exit(1); //1은 무슨 의미인가?
@@ -101,7 +98,6 @@ public class GameWindow extends JFrame {
                 clickedCardIndex = IndexOfClickedButton(e.getSource()); //여기 다시공부
                 //내가 누른 버튼의 카드
                 Card clickedCard = getClickedCard(clickedCardIndex);
-                System.out.println("내가 누른 카드: " + clickedCard.toString() + ", 카드 닫혀있나?: " + clickedCard.isClose);
 
                 //뒷 면일 경우만 반응
                 if (clickedCard.isClose) {
@@ -212,9 +208,7 @@ public class GameWindow extends JFrame {
         String name = Integer.toString(month);
         String ext = ".png";
 
-        ImageIcon imageIcon = new ImageIcon(path + name + ext);
-
-        return imageIcon;
+        return new ImageIcon(path + name + ext);
     }
 
     //첫번째버튼, 두번째버튼 같으면 true, 다르면 false
@@ -235,7 +229,7 @@ public class GameWindow extends JFrame {
     }
 
 
-    private void setFirstAndSecondCard() { //TODO:변수명 바꾸기
+    private void setFirstAndSecondCard() {
         if (FirstCard == null) {
             FirstCard = cardDeck.getCard(clickedCardIndex);
             FirstCardIndex = clickedCardIndex;
