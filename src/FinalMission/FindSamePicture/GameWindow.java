@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameWindow extends JFrame {
+public class GameWindow extends JFrame{
     private static final int BOARD_SIZE = 16;
 
     private JPanel jLeft;
@@ -52,7 +52,6 @@ public class GameWindow extends JFrame {
         initButton();
         showFrontImage();
         showBackImage();
-
         setVisible(true);
 
     }
@@ -115,9 +114,9 @@ public class GameWindow extends JFrame {
 
             cardButtons[i].addActionListener(new ActionListener() {
 
-
                 @Override
                 public void actionPerformed(ActionEvent e) {
+
                     //누르면 인덱스 출력
                     clickedCardIndex = IndexOfClickedButton(e.getSource()); //여기 다시공부
                     //내가 누른 버튼의 카드
@@ -129,6 +128,15 @@ public class GameWindow extends JFrame {
                         showClickFrontImage(clickedCardIndex,clickedCard);
                         settingFirstnSecondCardMonth();
                         compareCard();
+                    }
+
+                    //게임 끝났을 경우, clear 로그 메세지
+                    if(checkGameClear()){
+                        JLabel label = new JLabel("@♪(*^ㅡ^*)♪♪ Clear!!♪");
+                        Font font = new Font("Verdana", Font.BOLD, 70);
+                        label.setFont(font);
+                        JOptionPane.showMessageDialog(jCenter.getComponent(6),label);
+                        System.exit(0);
                     }
 
                 }
@@ -149,10 +157,6 @@ public class GameWindow extends JFrame {
 
 
 
-    //    public void update() {
-//        repaint();
-//    }
-//
     public void paint(Graphics g) {
         g.drawImage(background, 0, 0, this);
         //g.drawImage(cImage, 200, 200, this);
@@ -191,7 +195,7 @@ public class GameWindow extends JFrame {
             }
         };
 
-        timer.schedule(timerTask,2500);
+        timer.schedule(timerTask,1000 * 2);
 
     }
 
@@ -247,6 +251,15 @@ public class GameWindow extends JFrame {
         ImageIcon imageIcon = getCardImage(clickedCardMonth); //월 그림 출력
         cardButtons[index].setIcon(imageIcon);
 
+    }
+
+    private boolean checkGameClear(){
+        for (int i = 0; i < BOARD_SIZE; i++){
+            if(cardDeck.getCards().get(i).isClose) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

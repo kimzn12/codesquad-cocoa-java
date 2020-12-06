@@ -4,6 +4,6 @@ public class Application {
     public static void main(String[] args){
         Game game = new Game();
         game.play();
-        //GameWindow gameWindow = new GameWindow();
+        //GameClearPage gameClearPage = new GameClearPage();
     }
 }
